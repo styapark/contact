@@ -1,0 +1,15 @@
+http://192.168.185.20:8080/CustomerInfo/m.js
+http://192.168.185.20:8080/CustomerInfo/Customer
+http://10.20.173.44:8080/CustomerInfo/ami.js
+http://10.17.194.66:88/s/aif/smartfren/start_ifr.js
+http://10.17.194.66:88/s/aif/smartfren/ifr.css
+http://10.17.194.66:88/s/aif/smartfren/ads.common.1.0.css
+http://10.17.194.66:88/s/aif/smartfren/amquery.1.1.js
+http://10.17.194.66:88/s/aif/smartfren/ads.common.1.0.js
+http://10.17.194.66:88/s/aif/smartfren/ads.offdeck.1.0.min.js
+http://10.17.194.66/1/off
+http://10.17.194.66/1/offad
+http://10.17.194.66:88//s/aif/smartfren/amquery.1.1.js
+http://10.17.194.66:88//s/aif/smartfren/ads.common.1.0.js
+http://10.17.194.66:88//r/
+http://10.17.194.66/1/ip
