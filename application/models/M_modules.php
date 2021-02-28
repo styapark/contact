@@ -9,22 +9,24 @@
  */
 
 class M_modules extends CI_Model {
-    protected $list = [];
+    public $list = [];
     public function __construct() {
+        parent::__construct();
         if ( !class_exists('M_setup') ) {
             die('File M_setup is not found');
         }
 
         $list = $this->m_setup->system('modules');
         if ( is_json($list) ) {
-            $this->list = json_decode($list);
+            $list = json_decode($list);
+            if ( !empty($list) ) {
+                foreach ($list as $name_module) {
+                    if ( !empty($name_module) && !$this->load->is_loaded($name_module) ) {
+                        $this->load->model($name_module);
+                        $this->list[] = $name_module;
+                    }
+                }
+            }
         }
-    }
-
-    public function load( $name_modules = NULL ) {
-        if ( !empty($name_modules) && in_array($name_modules, $this->list) ) {
-            return $this->load->model($name_modules);
-        }
-        return FALSE;
     }
 }

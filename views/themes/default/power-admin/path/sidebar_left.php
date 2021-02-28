@@ -43,16 +43,21 @@
                 <a class="nav-link waves-effect" href="<?= power_admin('dashboard') ?>"><i class="zmdi zmdi-home"></i>Dashboard</a>
             </li>
             <?php if ($cname !== 'settings') { ?>
-            <li class="nav-item side-dropdown" data-sub="master">
-                <a class="nav-link waves-effect" href="#"><i class="zmdi zmdi-memory"></i>Master</a>
-                <div class="dropdown-menu">
-                    <a href="<?= power_admin('master/renstra') ?>" class="dropdown-item waves-effect">RENSTRA</a>
-                    <a href="<?= power_admin('master/renja') ?>" class="dropdown-item waves-effect">RENJA</a>
-                </div>
+<?php if (in_array('m_contact', $modules) ) { ?>
+            <li class="nav-item">
+                <a class="nav-link waves-effect" href="<?= power_admin('contact') ?>"><i class="zmdi zmdi-book"></i>Kontak</a>
             </li>
+<?php } ?>
+<?php if (in_array('m_contact', $modules) ) { ?>
+            <li class="nav-item">
+                <a class="nav-link waves-effect" href="<?= power_admin('contact') ?>"><i class="zmdi zmdi-book"></i>Kontak</a>
+            </li>
+<?php } ?>
+<?php if (in_array('m_analysis', $modules) ) { ?>
             <li class="nav-item">
                 <a class="nav-link waves-effect" href="<?= power_admin('chart') ?>"><i class="zmdi zmdi-trending-up"></i>Chart</a>
             </li>
+<?php } ?>
             <?php } else { ?>
             <li class="nav-item side-dropdown" data-sub="settings">
                 <a class="nav-link waves-effect" href="#"><i class="zmdi zmdi-settings"></i>Settings</a>

@@ -56,6 +56,7 @@ class MY_Controller extends CI_Controller {
         $this->data['preloader'] = FALSE;
         $this->data['__FUNCTION__'] = NULL;
         $this->data['identity'] = $this->config->item('identity', 'ion_auth');
+        $this->data['modules'] = $this->m_modules->list;
 
         if ( !empty($this->m_setup->system('name')) ) {
             $this->data['title'] = $this->m_setup->system('name');
