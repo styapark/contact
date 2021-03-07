@@ -22,8 +22,10 @@ class M_modules extends CI_Model {
             if ( !empty($list) ) {
                 foreach ($list as $name_module) {
                     if ( !empty($name_module) && !$this->load->is_loaded($name_module) ) {
-                        $this->load->model($name_module);
-                        $this->list[] = $name_module;
+                        if ( file_exists(APPPATH.'models/'. ucfirst($name_module).'.php') ) {
+                            $this->load->model($name_module);
+                            $this->list[] = $name_module;
+                        }
                     }
                 }
             }

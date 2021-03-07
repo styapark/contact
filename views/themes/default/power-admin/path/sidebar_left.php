@@ -43,16 +43,14 @@
                 <a class="nav-link waves-effect" href="<?= power_admin('dashboard') ?>"><i class="zmdi zmdi-home"></i>Dashboard</a>
             </li>
             <?php if ($cname !== 'settings') { ?>
+            <li class="nav-item side-dropdown" data-sub="master">
+                <a class="nav-link waves-effect" href="#"><i class="zmdi zmdi-developer-board"></i>Master</a>
+                <div class="dropdown-menu">
 <?php if (in_array('m_contact', $modules) ) { ?>
-            <li class="nav-item">
-                <a class="nav-link waves-effect" href="<?= power_admin('contact') ?>"><i class="zmdi zmdi-book"></i>Kontak</a>
-            </li>
+                    <a class="dropdown-item waves-effect" href="<?= power_admin('master/contact') ?>">Contact</a>
 <?php } ?>
-<?php if (in_array('m_contact', $modules) ) { ?>
-            <li class="nav-item">
-                <a class="nav-link waves-effect" href="<?= power_admin('contact') ?>"><i class="zmdi zmdi-book"></i>Kontak</a>
+                </div>
             </li>
-<?php } ?>
 <?php if (in_array('m_analysis', $modules) ) { ?>
             <li class="nav-item">
                 <a class="nav-link waves-effect" href="<?= power_admin('chart') ?>"><i class="zmdi zmdi-trending-up"></i>Chart</a>
