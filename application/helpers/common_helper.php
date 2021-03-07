@@ -376,6 +376,21 @@ if ( !function_exists('force_intval') ) {
     }
 }
 
+if ( !function_exists('force_floatval') ) {
+    function force_floatval( $option ) {
+        $tmp = [];
+        if ( !empty($option) && is_array($option) ) {
+            foreach ($option as $key=>$row) {
+                $tmp[$key] = floatval($row);
+            }
+        }
+        else {
+            $tmp = floatval($option);
+        }
+        return $tmp;
+    }
+}
+
 if ( !function_exists('force_alphanum') ) {
     function force_alphanum( $option ) {
         $tmp = [];
