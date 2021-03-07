@@ -10,6 +10,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 /* power-admin */
+$route['power-admin/master/contact'] = 'power-admin/contact';
 $route['power-admin/dashboard'] = 'power-admin/home/dashboard';
 $route['power-admin'] = 'power-admin/home';
 
