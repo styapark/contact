@@ -166,7 +166,7 @@ class Datatables {
     private function count_all( $table, $where = NULL ) {
         $get = $this->db->get( $table );
         if ( !empty($where) ) {
-            $get = $this->db->query('SELECT id_'.str_replace('my_','',$table).' FROM '.$table.' '.$where);
+            $get = $this->db->query('SELECT id_'.str_replace($this->db->dbprefix,'',$table).' FROM '.$table.' '.$where);
         }
         return $get->num_rows();
     }

@@ -16,12 +16,15 @@
                 <hr class="my-3">
                 <div class="row">
                     <div class="table-responsive">
-                    <table class="table table-hover" id="datatables" name="<?= $cname ?>" data-src="<?= MyLite_base.'services/'.$cname ?>">
+                    <table class="table table-hover table-server-side" name="<?= $cname ?>" data-src="<?= MyLite_base.'services/v1/'.$cname.'/table' ?>">
                         <thead>
                             <tr>
-                                <th data-field="#">#</th>
+                                <th data-field="#" data-sort="false">#</th>
                                 <th data-field="name">Nama</th>
-                                <th data-field="name_user">Oleh</th>
+                                <th data-field="company">Perusahaan</th>
+                                <th data-field="address">Alamat Pribadi</th>
+                                <th data-field="address_company">Alamat Perusahaan</th>
+                                <th data-field="tags" data-sort="false">Tags</th>
                                 <th data-field="__callback" data-callback="actionEditDelete">Action</th>
                             </tr>
                         </thead>

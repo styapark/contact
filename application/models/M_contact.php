@@ -17,6 +17,7 @@ class M_contact extends CI_Model {
 
     public function fetch( $id = NULL, $hash = NULL, $name = NULL, $company = NULL, $address = NULL, $address_company = NULL, $created = NULL, $modified = NULL ) {
         $this->db->select('*');
+        $this->db->from($this->table);
         if ( !empty($id) ){
             if ( is_array($id) ) {
                 $this->db->where_in( 'id_'.$this->table, force_intval($id) );

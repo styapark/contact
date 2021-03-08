@@ -21,7 +21,7 @@ if ( $ !== undefined ) {
             setup.mapping.id = setup.id;
             window.global_datatables.push( setup.mapping );
 
-            var column = [], lengthMenu = [];
+            var column = [], lengthMenu = [], order = [];
             var src = $(this).attr('data-src');
             var callback = $(this).find('th[data-callback]').attr('data-callback');
             var ordering = $(this).attr('data-ordering') !== undefined ? $(this).attr('data-ordering'): true;
@@ -32,7 +32,16 @@ if ( $ !== undefined ) {
             $(this).find('th[data-field]').each(function(i,e){
                 var a = {};
                 a['data'] = $(this).attr('data-field');
+                a['orderable'] = $(this).attr('data-order') == 'false' ? false: true;
                 column.push(a);
+            });
+            $(this).find('th').each(function(i,e){
+                var a = [];
+                a[0] = i;
+                a[1] = $(this).attr('data-order');
+                if ( $(this).attr('data-order') != undefined ) {
+                    order.push(a);
+                }
             });
 
             if ( src !== undefined ) {
@@ -44,7 +53,7 @@ if ( $ !== undefined ) {
                     ajax: {
                         url: src
                     },
-                    order: [],
+                    order: order,
                     columns: column,
                     columnDefs: [
                         {

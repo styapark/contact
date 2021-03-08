@@ -18,8 +18,9 @@ class MY_Controller extends CI_Controller {
     public $theme;
     public $power_base;
     public $data;
-    public $login_require;
-    public $is_login;
+    public $city;
+    protected $login_require = FALSE;
+    protected $is_login = TRUE;
 
     public function __construct() {
         parent::__construct();
@@ -43,7 +44,8 @@ class MY_Controller extends CI_Controller {
         
         // memuat keamanan csrf
         $this->csrf = [ 'name' => $this->security->get_csrf_token_name(), 'hash' => $this->security->get_csrf_hash() ];
-        
+
+        $this->data['city'] = $this->city = $this->m_region->get_dropdown($this->m_setup->system('system_city'));
         $this->data['print'] = FALSE;
         $this->data['title'] = $this->title.' - v'.$this->cms_version;
         $this->data['csrf']  = $this->csrf;
@@ -76,5 +78,55 @@ class MY_Controller extends CI_Controller {
                 $this->is_login = TRUE;
             }
         }
+    }
+}
+
+require APPPATH . '/libraries/Format.php';
+require APPPATH . '/libraries/RestController.php';
+use chriskacerguis\RestServer\RestController as REST_Controller;
+
+class API_Controller extends REST_Controller {
+    protected $login_require = FALSE;
+    protected $is_login = TRUE;
+    protected $data;
+    public $theme;
+    public $dir_admin = 'power-admin/';
+    public $city;
+
+    public function __construct( $login_require = FALSE ) {
+        parent::__construct();
+
+        $this->config->load('mylite');
+        // mengambil nama config dari mylite [themes]
+        $this->cms_themes = $this->config->item('themes');
+        $this->theme = 'themes/'.$this->cms_themes;
+        $this->city = $this->m_region->get_dropdown($this->m_setup->system('city'));
+        $this->data = [
+            'status' => FALSE,
+            'message' => 'None',
+            'data' => [],
+            'csrf' => [
+                'name' => $this->security->get_csrf_token_name(),
+                'hash' => $this->security->get_csrf_hash()
+            ]
+        ];
+
+        if ( $login_require ) {
+            $this->login_require = (bool) $login_require;
+            if ( !$this->ion_auth->logged_in() ) {
+                $this->is_login = FALSE;
+                unset($this->data['csrf']);
+            }
+            if ( $this->ion_auth->logged_in() ) {
+                $this->is_login = TRUE;
+            }
+        }
+    }
+
+    public function responses( $data = null, $http_code = null, $continue = false ) {
+        if ( !$this->is_login ) {
+            $data['data'] = [];
+        }
+        $this->response($data, $http_code, $continue);
     }
 }
