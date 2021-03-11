@@ -55,8 +55,8 @@ if ( $ !== undefined ) {
     }
     
     /* start initial */
-    function dataNumber() {
-        $('input[data-number]').on('keyup keypress', function(e) {
+    function dataNumber( ini = null ) {
+        $( ini != null ? ini: 'input[data-number]').on('keyup keypress', function(e) {
             var keyarr = [46,48,49,50,51,52,53,54,55,56,57];
             var keyCode = e.keyCode || e.which;
             if (jQuery.inArray(keyCode,keyarr) === -1) { 

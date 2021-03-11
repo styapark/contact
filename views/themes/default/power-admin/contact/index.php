@@ -8,10 +8,78 @@
         <li class="breadcrumb-item active"><?= ucfirst($cname) ?></li>
     </ol>
     <div class="row">
+        <script src="media/js/controller/<?= $cname ?>.js?_=<?= date('Ymd') ?>" type="text/javascript"></script>
         <div class="col-12">
-            <div class="card card-body" id="<?= $cname ?>">
+            <div class="card card-body" id="<?= $cname ?>" ng-controller="<?= $cname ?>Controller">
                 <div class="h6 font-bold">
                     <span>Master <?= ucfirst($cname) ?></span>
+                </div>
+                <hr class="my-1">
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary btn-sm m-0 float-right" data-toggle="modal" data-target="#add"><i class="zmdi zmdi-plus"></i> Tambah</button>
+                    <form class="modal fade" id="add" ng-controller="AddController" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Tambah <?= ucwords($cname) ?></h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group md">
+                                                <label>Nama Lengkap</label>
+                                                <input class="form-control md" type="text" name="name" data-required>
+                                                <i class="form-bar"></i>
+                                            </div>
+                                            <div class="form-group md">
+                                                <label>Nama Perusahaan</label>
+                                                <input class="form-control md" type="text" name="company" data-required>
+                                                <i class="form-bar"></i>
+                                            </div>
+                                            <div class="form-group md">
+                                                <label>Alamat Pribadi</label>
+                                                <textarea class="form-control md" rows="3" name="address" data-required></textarea>
+                                                <i class="form-bar"></i>
+                                            </div>
+                                            <div class="form-group md">
+                                                <label>Alamat Perusahaan</label>
+                                                <textarea class="form-control md" rows="3" name="address_company" data-required></textarea>
+                                                <i class="form-bar"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group" ng-repeat="detail in tableDetails track by $index" ng-controller="AddDetailController">
+                                                <div class="form-inline">
+                                                    <div class="form-group md">
+                                                        <select class="form-control md" name="detail[type][{{ $index }}]" ng-model="detail.type" ng-options="type.value as type.label for type in detail_type"></select>
+                                                        <i class="form-bar"></i>
+                                                    </div>
+                                                    <div class="form-group md">
+                                                        <input class="form-control md" autocomplete="off" type="text" name="detail[value][{{ $index }}]" ng-model="detail.value" placeholder="08xx" data-number ng-if="detail.type == 'phone'">
+                                                        <input class="form-control md" autocomplete="off" type="email" name="detail[value][{{ $index }}]" ng-model="detail.value" placeholder="test@test.com" ng-if="detail.type == 'email'">
+                                                        <input class="form-control md" autocomplete="off" type="text" name="detail[value][{{ $index }}]" ng-model="detail.value" placeholder="Kediri" ng-if="detail.type == 'tags'">
+                                                        <textarea class="form-control md" rows="2" name="detail[value][{{ $index }}]" ng-model="detail.value" ng-if="detail.type == 'note'"></textarea>
+                                                        <i class="form-bar"></i>
+                                                    </div>
+                                                    <div class="form-group md">
+                                                        <a href="#" ng-click="removeDetail( $index )" title="Hapus"><i class="zmdi zmdi-delete"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-sm btn-info pull-right" ng-click="addDetail()"><i class="zmdi zmdi-format-list-bulleted"></i> Tambah</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="hidden" name="<?= $csrf['name'] ?>" value="<?= $csrf['hash'] ?>">
+                                    <button type="submit" class="btn btn-sm btn-primary"><i class="zmdi zmdi-cloud-upload"></i> Simpan</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal"><i class="zmdi zmdi-undo"></i> Kembali</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <hr class="my-3">
                 <div class="row">
@@ -31,7 +99,7 @@
                     </table>
                     </div>
                 </div>
-                <form class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+                <form class="modal fade" id="edit" ng-controller="EditController" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -40,29 +108,8 @@
                             <div class="modal-body">
                                 <div class="form-group md">
                                     <label>Nama Bidang / Urusan</label>
-                                    <?= form_dropdown('type', $urusan, NULL, 'class="form-control md"') ?>
-                                    <i class="form-bar"></i>
-                                </div>
-                                <div class="form-group md">
-                                    <label>Kode Bidang</label>
                                     <input type="hidden" name="id" value="">
-                                    <input type="text" name="code" class="form-control md" value="" data-number data-required>
-                                    <i class="form-bar"></i>
-                                </div>
-                                <div class="form-group md">
-                                    <label>Kustomisasi <?= ucwords($p) ?></label>
-                                    <div class="custom-control custom-radio mb-3">
-                                        <input type="radio" name="custom" class="custom-control-input" value="0" id="custom-edit-0">
-                                        <label class="custom-control-label" for="custom-edit-0">Disable</label>
-                                    </div>
-                                    <div class="custom-control custom-radio mb-3">
-                                        <input type="radio" name="custom" class="custom-control-input" value="1" id="custom-edit-1">
-                                        <label class="custom-control-label" for="custom-edit-1">Enable</label>
-                                    </div>
-                                </div>
-                                <div class="form-group md">
-                                    <label>Nama Bidang</label>
-                                    <textarea name="name" class="form-control md" data-required></textarea>
+                                    <?= form_dropdown('type', $urusan, NULL, 'class="form-control md"') ?>
                                     <i class="form-bar"></i>
                                 </div>
                             </div>
