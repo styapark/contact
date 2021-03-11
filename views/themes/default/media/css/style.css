@@ -1160,8 +1160,14 @@ select.form-control.md {
 .modal .modal-body div[class*=col-] > .form-group.md:last-child {
     margin-bottom: 0 !important;
 }
+.modal .modal-body div[class*=col-] .modal-detail-content {
+    padding: 10px 15px 15px;
+    border: 1px solid #bbb;
+    max-height: 336px;
+}
 .modal .modal-body .form-inline {
     align-items: self-start;
+    padding-left: 20px;
 }
 .modal .modal-body .form-inline .form-group.md {
     margin-bottom: 5px !important;
@@ -1283,4 +1289,10 @@ select.form-control.md {
 .target-kinerja ul, .tw-kinerja ul {
     list-style: none;
     padding-left: 0;
+}
+
+@media (max-width: 767px) {
+    .modal .modal-body .row.justify-content-end {
+        margin-top: 20px;
+    }
 }

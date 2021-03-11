@@ -1,4 +1,6 @@
 gpid.controller('contactController', function( $scope, $http, $timeout ) {
+    $scope.defaultTitle = 'Pribadi';
+    $scope.title = $scope.defaultTitle;
     $scope.detail_type = [
         { value: 'phone', label: 'Telepon' },
         { value: 'email', label: 'E-mail' },
@@ -15,8 +17,9 @@ gpid.controller('AddController', function( $scope, $http, $timeout ) {
     };
     $scope.addDetail = function ( index = null ) {
         var row = angular.copy($scope.rowDetail);
+        row.title = $scope.title;
+        $scope.title = $scope.defaultTitle;
 
-        console.log(row);
         $scope.tableDetails.push(row);
     };
     $scope.addDetail();

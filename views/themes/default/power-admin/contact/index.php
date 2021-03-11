@@ -25,49 +25,66 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-md-5">
                                             <div class="form-group md">
                                                 <label>Nama Lengkap</label>
-                                                <input class="form-control md" type="text" name="name" data-required>
+                                                <input class="form-control md" autocomplete="off" type="text" name="name" data-required>
                                                 <i class="form-bar"></i>
                                             </div>
                                             <div class="form-group md">
                                                 <label>Nama Perusahaan</label>
-                                                <input class="form-control md" type="text" name="company" data-required>
+                                                <input class="form-control md" autocomplete="off" type="text" name="company" data-required>
                                                 <i class="form-bar"></i>
                                             </div>
                                             <div class="form-group md">
                                                 <label>Alamat Pribadi</label>
-                                                <textarea class="form-control md" rows="3" name="address" data-required></textarea>
+                                                <textarea class="form-control md" autocomplete="off" rows="3" name="address" data-required></textarea>
                                                 <i class="form-bar"></i>
                                             </div>
                                             <div class="form-group md">
                                                 <label>Alamat Perusahaan</label>
-                                                <textarea class="form-control md" rows="3" name="address_company" data-required></textarea>
+                                                <textarea class="form-control md" autocomplete="off" rows="3" name="address_company" data-required></textarea>
                                                 <i class="form-bar"></i>
                                             </div>
                                         </div>
-                                        <div class="col-6">
-                                            <div class="form-group" ng-repeat="detail in tableDetails track by $index" ng-controller="AddDetailController">
-                                                <div class="form-inline">
-                                                    <div class="form-group md">
-                                                        <select class="form-control md" name="detail[type][{{ $index }}]" ng-model="detail.type" ng-options="type.value as type.label for type in detail_type"></select>
-                                                        <i class="form-bar"></i>
+                                        <div class="col-md-7">
+                                            <div class="form-group my-1">
+                                                <div class="row justify-content-end">
+                                                    <div class="col-6">
+                                                        <input class="form-control md" autocomplete="off" type="text" ng-model="search" placeholder="Pencarian">
                                                     </div>
-                                                    <div class="form-group md">
-                                                        <input class="form-control md" autocomplete="off" type="text" name="detail[value][{{ $index }}]" ng-model="detail.value" placeholder="08xx" data-number ng-if="detail.type == 'phone'">
-                                                        <input class="form-control md" autocomplete="off" type="email" name="detail[value][{{ $index }}]" ng-model="detail.value" placeholder="test@test.com" ng-if="detail.type == 'email'">
-                                                        <input class="form-control md" autocomplete="off" type="text" name="detail[value][{{ $index }}]" ng-model="detail.value" placeholder="Kediri" ng-if="detail.type == 'tags'">
-                                                        <textarea class="form-control md" rows="2" name="detail[value][{{ $index }}]" ng-model="detail.value" ng-if="detail.type == 'note'"></textarea>
-                                                        <i class="form-bar"></i>
-                                                    </div>
-                                                    <div class="form-group md">
-                                                        <a href="#" ng-click="removeDetail( $index )" title="Hapus"><i class="zmdi zmdi-delete"></i></a>
+                                                </div>
+                                            </div>
+                                            <div class="modal-detail-content">
+                                                <div class="form-group" ng-repeat="detail in tableDetails track by $index" ng-controller="AddDetailController">
+                                                    <div class="form-group md my-0 font-bold">{{ detail.title }}</div>
+                                                    <div class="form-inline">
+                                                        <div class="form-group md">
+                                                            <select class="form-control md" name="detail[type][{{ $index }}]" ng-model="detail.type" ng-options="type.value as type.label for type in detail_type"></select>
+                                                            <i class="form-bar"></i>
+                                                        </div>
+                                                        <div class="form-group md">
+                                                            <input class="form-control md" autocomplete="off" type="text" name="detail[value][{{ $index }}]" ng-model="detail.value" placeholder="08xx" data-number ng-if="detail.type == 'phone'">
+                                                            <input class="form-control md" autocomplete="off" type="email" name="detail[value][{{ $index }}]" ng-model="detail.value" placeholder="test@test.com" ng-if="detail.type == 'email'">
+                                                            <input class="form-control md" autocomplete="off" type="text" name="detail[value][{{ $index }}]" ng-model="detail.value" placeholder="Kediri" ng-if="detail.type == 'tags'">
+                                                            <textarea class="form-control md" rows="2" name="detail[value][{{ $index }}]" ng-model="detail.value" ng-if="detail.type == 'note'"></textarea>
+                                                            <i class="form-bar"></i>
+                                                        </div>
+                                                        <div class="form-group md">
+                                                            <a href="#" ng-click="removeDetail( $index )" title="Hapus"><i class="zmdi zmdi-delete"></i></a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <button type="submit" class="btn btn-sm btn-info pull-right" ng-click="addDetail()"><i class="zmdi zmdi-format-list-bulleted"></i> Tambah</button>
+                                                <div class="form-inline pull-right">
+                                                    <div class="form-group">
+                                                        <input class="form-control md" autocomplete="off" type="text" ng-model="title" placeholder="Judul" style="width: 120px">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="submit" class="btn btn-sm btn-info" ng-click="addDetail()">Tambah</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
