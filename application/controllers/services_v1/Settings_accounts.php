@@ -7,25 +7,13 @@
  * @email styapark@gmail.com
  * All rights reserved.
  */
-require APPPATH . '/libraries/Format.php';
-require APPPATH . '/libraries/RestController.php';
-use chriskacerguis\RestServer\RestController as REST_Controller;
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Settings_accounts extends REST_Controller{
-    protected $data;
+class Settings_accounts extends API_Controller{
     public function __construct() {
-        parent::__construct();
+        parent::__construct(TRUE);
 
         $this->load->model('m_accounts');
-        $this->data = [
-            'status' => FALSE,
-            'data' => [],
-            'message' => 'None',
-            'csrf' => [
-                'name' => $this->security->get_csrf_token_name(),
-                'hash' => $this->security->get_csrf_hash()
-            ]
-        ];
     }
 
     public function get_get() {

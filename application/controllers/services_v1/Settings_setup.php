@@ -7,11 +7,9 @@
  * @email styapark@gmail.com
  * All rights reserved.
  */
-require APPPATH . '/libraries/Format.php';
-require APPPATH . '/libraries/RestController.php';
-use chriskacerguis\RestServer\RestController as REST_Controller;
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Settings_setup extends REST_Controller{
+class Settings_setup extends API_Controller{
     protected $data;
     public function __construct() {
         parent::__construct();

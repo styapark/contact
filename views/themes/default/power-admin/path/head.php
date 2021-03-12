@@ -31,11 +31,14 @@
         <link rel="stylesheet" href="media/css/style.css?_=<?= time() ?>"/>
         <script src="media/js/d958c283e70811506bbc470025689935"></script>
         <script src="media/js/<?= md5('angular.min.js') ?>"></script>
+        <script src="media/js/<?= md5('parsley.min.js') ?>"></script>
+        <script src="media/js/i18n/id.js"></script>
+        <script src="media/js/i18n/id.extra.js"></script>
+        <script src="media/js/<?= md5('global.validation.js') ?>"></script>
         <script src="media/js/app.js"></script>
         <script src="media/js/shim.min.js"></script>
         <script src="media/js/<?= md5('Chart.bundle.min.js') ?>"></script>
         <script src="media/js/xlsx.full.min.js"></script>
-        <!--<script src="media/js/jspdf.min.js"></script>-->
 <?php if ($print) { ?>
 <!--        <script type="text/javascript">
             window.onload = function() {

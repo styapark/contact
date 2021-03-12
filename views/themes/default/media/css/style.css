@@ -1064,7 +1064,7 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
     height: 2px;
     width: 0;
     bottom: 0;
-    transition: 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
     background-color: #2196f3;
 }
 .form-group.md .md-label {
@@ -1198,6 +1198,21 @@ select.form-control.md {
 }
 .modal .modal-body ol li.underline:not(:last-child) .form-group {
     margin-bottom: 0.75rem;
+}
+.parsley-errors-list {
+    color: #ff3547;
+    margin-bottom: 0 !important;
+    list-style: none;
+}
+.parsley-errors-list li {
+    text-align: right;
+}
+.parsley-success ~ .form-bar:before, .parsley-success ~ .form-bar:after {
+    background-color: #00B74A !important;
+}
+.parsley-error ~ .form-bar:before, .parsley-error ~ .form-bar:after {
+    background-color: #F93154 !important;
+    bottom: 19px !important;
 }
 
 /* BTN */

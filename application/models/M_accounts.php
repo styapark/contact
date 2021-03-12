@@ -163,7 +163,6 @@ class M_accounts extends Ion_auth_model {
             $query = $this->fetch($id, $id_group, $username);
         }
 
-        print_json($this->db->last_query());
         if ( !empty($this->option['search']['value']) ) {
             $this->count_filtered = $this->tmp->get()->num_rows();
         }

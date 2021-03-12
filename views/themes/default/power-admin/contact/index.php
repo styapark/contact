@@ -17,7 +17,7 @@
                 <hr class="my-1">
                 <div class="form-group">
                     <button type="button" class="btn btn-primary btn-sm m-0 float-right" data-toggle="modal" data-target="#add"><i class="zmdi zmdi-plus"></i> Tambah</button>
-                    <form class="modal fade" id="add" ng-controller="AddController" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+                    <form class="modal fade" id="add" ng-controller="AddController" novalidate>
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -28,22 +28,22 @@
                                         <div class="col-md-5">
                                             <div class="form-group md">
                                                 <label>Nama Lengkap</label>
-                                                <input class="form-control md" autocomplete="off" type="text" name="name" data-required>
+                                                <input class="form-control md" autocomplete="off" type="text" name="name" required>
                                                 <i class="form-bar"></i>
                                             </div>
                                             <div class="form-group md">
                                                 <label>Nama Perusahaan</label>
-                                                <input class="form-control md" autocomplete="off" type="text" name="company" data-required>
+                                                <input class="form-control md" autocomplete="off" type="text" name="company" required>
                                                 <i class="form-bar"></i>
                                             </div>
                                             <div class="form-group md">
                                                 <label>Alamat Pribadi</label>
-                                                <textarea class="form-control md" autocomplete="off" rows="3" name="address" data-required></textarea>
+                                                <textarea class="form-control md" autocomplete="off" rows="3" name="address" required></textarea>
                                                 <i class="form-bar"></i>
                                             </div>
                                             <div class="form-group md">
                                                 <label>Alamat Perusahaan</label>
-                                                <textarea class="form-control md" autocomplete="off" rows="3" name="address_company" data-required></textarea>
+                                                <textarea class="form-control md" autocomplete="off" rows="3" name="address_company" required></textarea>
                                                 <i class="form-bar"></i>
                                             </div>
                                         </div>
@@ -70,7 +70,7 @@
                                                             <textarea class="form-control md" rows="2" name="detail[value][{{ $index }}]" ng-model="detail.value" ng-if="detail.type == 'note'"></textarea>
                                                             <i class="form-bar"></i>
                                                         </div>
-                                                        <div class="form-group md">
+                                                        <div class="form-group md my-0" style="position: absolute; right: 31px;">
                                                             <a href="#" ng-click="removeDetail( $index )" title="Hapus"><i class="zmdi zmdi-delete"></i></a>
                                                         </div>
                                                     </div>

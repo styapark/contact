@@ -8,7 +8,7 @@ gpid.controller('contactController', function( $scope, $http, $timeout ) {
         { value: 'note', label: 'Catatan' }
     ];
 });
-gpid.controller('AddController', function( $scope, $http, $timeout ) {
+gpid.controller('AddController', function( $scope, $http, $timeout, $element ) {
     $scope.tableDetails = [];
     $scope.rowDetail = {
         type: 'phone',
@@ -23,6 +23,11 @@ gpid.controller('AddController', function( $scope, $http, $timeout ) {
         $scope.tableDetails.push(row);
     };
     $scope.addDetail();
+
+//    $($element).submit(function(e){
+//        e.preventDefault();
+//        console.log('aja');
+//    });
 });
 gpid.controller('AddDetailController', function( $scope, $http, $timeout, $element ) {
     $scope.$watch('detail.type', function($current){

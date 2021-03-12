@@ -219,28 +219,6 @@ if ( $ !== undefined ) {
             }
         });
     }
-    function module_visi($p) {
-        var main = $('#'+$p);
-        var $q = 'visi';
-        var q = $q;
-        main.find('#'+$q).submit(function(e){
-            e.preventDefault();
-            var data = $(this).serialize();
-            var url = root + 'services/'+$p+'/'+q;
-            var error = 0;
-
-            $(this).serializeArray().forEach(function(e){
-                notif_empty(e, error);
-            });
-
-            if ( error == 0 ) {
-                $.post(url, data, function(e){
-                    console.log(e);
-                    response_save(e,base);
-                },'json');
-            }
-        });
-    }
     function module_add_edit($p,$q) {
         btn_slidedown($p,$q);
         add_dropup($p,$q,'json');
@@ -588,173 +566,13 @@ if ( $ !== undefined ) {
             }
         });
     });
-    
-    
-    // DATATABLES ##############################################################
-    window.datatables = { _table: {}, url: '', data: [] };
+
     $(document).ready(function(){
-        var lang = root + 'media/js/37d130f57c6b594011739b65f2758653';
-        var src = $('#datatables').attr('data-src');
-        var column = [], lengthMenu = [];
-        var callback = $('#datatables').find('th[data-callback]').attr('data-callback');
-        var ordering = $('#datatables').attr('data-ordering') !== undefined ? $('#datatables').attr('data-ordering'): true;
-        var lengthMenus = $('#datatables').attr('data-lengthmenu') !== undefined ? $('#datatables').attr('data-lengthmenu').split(','): [ 10, 25, 50, 100 ];
-        lengthMenus.forEach(function(value,index){
-            lengthMenu[index] = parseInt(value);
-        });
-        $('#datatables').find('th[data-field]').each(function(i,e){
-            var a = {};
-            a['data'] = $(this).attr('data-field');
-            column.push(a);
-        });
-        
-        if ( src !== undefined ) {
-            window.datatables._table = $('#datatables').dataTable({
-                "lengthMenu": lengthMenu,
-                "ordering": ordering,
-                "ajax": src,
-                "columns": column,
-                "columnDefs": [
-                    {
-                        "orderable": false,
-                        "targets": 0,
-                        "className": "text-nowrap"
-                    },
-                    {
-                        "targets": -1,
-                        "className": "text-nowrap",
-                        "data": "__callback",
-                        "defaultContent": eval( callback )
-                    }
-                ],
-                "language": {
-                    "url": lang
-                },
-                "createdRow": function( row, data, dataIndex){
-                    window.datatables.data.push(data);
-                    if ( data.status == 1 ) {
-                        $(row).addClass('light-green lighten-5');
-                    }
-                }
-            });
-            window.datatables.url = window.datatables._table.api().ajax.url();
-        }
-        /* action */
-        /* ON COMPLETE */
-        if ( src !== undefined ) {
-            window.datatables._table.on('xhr.dt', function ( e, settings, json, xhr ) {
-                xhr.done(function(result) {
-                    $('#datatables tbody tr').each(function() {
-                        var row = window.datatables._table.api().row(this).data();
+        $('[required]').each(function(index, row){
+            var parent = $(row).parents('.form-group.md');
 
-                        /* Setting *********************************************************/
-                        // accounts
-                        if ( base.search('settings/accounts') !== -1 ) {
-                            if ( [undefined,'0',null].indexOf(row.active) !== -1 ) {
-                                $(this).find('[title=Power] i').removeClass('zmdi-power green-text');
-                                $(this).find('[title=Power] i').addClass('zmdi-power-setting red-text');
-                            }
-                        }
-                    });
-                });
-            });
-        }
-        
-        /* IN ACTIVE */
-        $('#datatables tbody').on('click', 'label[title=Inactive]', function(){
-            var row = window.datatables._table.api().row( $(this).parents('tr') ).data();
-            window.location = base + ( base.search('set') === -1 ? '/set/' + row.id: '');
-        });
-        /* POWER */
-        $('#datatables tbody').on('click', 'span[title=Power]', function(){
-            var row = window.datatables._table.api().row( $(this).parents('tr') ).data();
-            if ( base.search('settings/accounts') !== -1 ) {
-                window.location = base + ( base.search('suspend') === -1 ? '/suspend/' + row.id: '');
-            }
-        });
-        /* CREATE */
-        $('#datatables tbody').on('click', 'span[title=Create]', function(){
-            var row = window.datatables._table.api().row( $(this).parents('tr') ).data();
-            var m = $('#create');
-            if ( base.search('master/skpd') !== -1 || base.search('master/opd') !== -1 ) {
-                module_btn_create_member_skpd(row,m);
-            }
-        });
-        /* DETAIL */
-        $('#datatables tbody').on('click', 'span[title=Detail]', function(){
-            var row = window.datatables._table.api().row( $(this).parents('tr') ).data();
-            var m = $('#detail');
-            var $master = base.replace(root + 'power-admin/master/','');
-
-            /* Master *********************************************************/
-            // dpa
-            if ( base.search('dpa') !== -1 ) {
-                if ( row.status !== 1 && row.id !== undefined ) {
-                    m.modal();
-                    m.find('[name=id]').val( row.id );
-                    m.find('#name').html( row.name );
-                    m.find('#code').html( row.code );
-                    m.find('#tolak_ukur').html( row.tolak_ukur_text );
-                    m.find('#target_kinerja').html( row.target_kinerja_text );
-                    m.find('#target_nominal').html( row.target_nominal_text );
-                }
-                else {
-                    alert('ini adalah Master, tidak dapat dimanipulasi');
-                }
-            }
-        });
-            
-        /* EDIT */
-        $('#datatables tbody').on('click', 'span[title=Edit]', function(){
-            var row = window.datatables._table.api().row( $(this).parents('tr') ).data();
-            var m = $('#edit');
-            var $master = base.replace(root + 'power-admin/master/','');
-            
-            /* Setting *********************************************************/
-            // accounts
-            if ( base.search('settings/accounts') !== -1 ) {
-                if ( row.id !== undefined ) {
-                    m.modal();
-                    m.find('[name=id]').val( row.id );
-                    m.find('[name=first_name]').val( row.first_name );
-                    m.find('[name=last_name]').val( row.last_name );
-                    m.find('[name=username]').val( row.username );
-                    m.find('[name=email]').val( row.email );
-                }
-                else {
-                    alert('Tidak dapat dimanipulasi');
-                }
-            }
-        });
-        /* DELETE */
-        $('#datatables tbody').on('click', 'span[title=Delete]', function(){
-            var parent = $(this).parents('tr');
-            var api = window.datatables._table.api().row( parent );
-            var ajaxs = window.datatables._table.api().ajax;
-            var row = api.data();
-            var name = $(this).parents('table').attr('name') + '/';
-
-            /* Setting *********************************************************/
-            // accounts
-            if ( base.search('settings/accounts') !== -1 ) {
-                if ( row.id !== undefined && row.group_id < 9 ) {
-                    notif_delete('"' + row.fullname + '"', name + row.id, api);
-                }
-                else {
-                    alert('Tidak dapat dimanipulasi');
-                }
-            }
-            
-        });
-
-        /* PRINT */
-        $('#datatables tbody').on('click', 'span[title=Print]', function(){
-            var row = window.datatables._table.api().row( $(this).parents('tr') ).data();
-            var m = $('#print');
-            if ( base.search('report/save') !== -1 ) {
-                var url = root + 'power-admin/report/evaluasi/print/'+ row.form + '/' + row.id;
-                var win = window.open(url, '_blank');
-                win.focus();
+            if ( parent.find('label').length > 0 ) {
+                parent.find('label').append( $('<span>').addClass('text-danger').text(' *)') );
             }
         });
     });

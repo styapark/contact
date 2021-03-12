@@ -70,7 +70,9 @@ class Media extends CI_Controller {
             '4de7b0e34761aed54e4d1d98396c1535' => 'mylite.init.native.js',
             '2249c9744084d294bb65a7ce31a73d6b' => 'mylite.init.jquery.js',
             '4d93f5a82d0f3ff7a38cdac3044bda64' => 'snarl.js',
+            'e202be5383ce0d63fad5df2cd63ef40c' => 'parsley.js',
             'd270611c1b6918f75024f19b996ccf87' => 'global.datatables.js',
+            '38674066382f9ee1823e6350ec6bae36' => 'global.validation.js',
         ];
     }
 
