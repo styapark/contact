@@ -10,6 +10,25 @@ gpid.config(['$provide', function ($provide) {
     }]);
 }]);
 
+gpid.directive('form', function( $rootScope, $http ){
+    return {
+        restrict: 'E',
+        require: '^?form',
+        link: function (scope, form, attrs) {
+            $(form).submit(function(e){
+                e.preventDefault();
+
+                var url = $(this).data('action');
+                var data = $(this).serializeArray();
+
+                if ( scope.parsley.isValid() && url != undefined ) {
+                    console.log(data);
+                }
+            });
+        }
+    };
+});
+
 var base = window.location.protocol + '//' + window.location.host + window.location.pathname;
 var path = base.replace(root + 'power-admin/', '');
 var surl = path.split('/');

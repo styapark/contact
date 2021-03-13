@@ -8,12 +8,13 @@ gpid.controller('contactController', function( $scope, $http, $timeout ) {
         { value: 'note', label: 'Catatan' }
     ];
 });
-gpid.controller('AddController', function( $scope, $http, $timeout, $element ) {
+gpid.controller('AddController', function( $scope, $http, $timeout, $element, $filter ) {
     $scope.tableDetails = [];
     $scope.rowDetail = {
         type: 'phone',
         title: '',
-        value: ''
+        value: '',
+        visible: 1
     };
     $scope.addDetail = function ( index = null ) {
         var row = angular.copy($scope.rowDetail);
@@ -21,16 +22,39 @@ gpid.controller('AddController', function( $scope, $http, $timeout, $element ) {
         $scope.title = $scope.defaultTitle;
 
         $scope.tableDetails.push(row);
+        $timeout(function(){
+            $($element).find('[ng-model="detail.value"]:last-of-type').focus();
+        }, 10);
     };
     $scope.addDetail();
+    $scope.$watch('search', function( $current ){
+        if ( $current != undefined ) {
+            var main_index = [], arr_index = [];
+            var copy = angular.copy($scope.tableDetails);
+            main_index = Array.from($scope.tableDetails.keys());
+            var filter = $filter('filter')( copy, function(r){
+                return r.title.indexOf($current) !== -1 || r.value.indexOf($current) !== -1;
+            });
+            filter.forEach(function(row) {
+                var index = $scope.tableDetails.findIndex(function(r){
+                    return r.title == row.title || (row.value != '' && r.value == row.value);
+                });
+                arr_index.push(index);
+            });
 
-//    $($element).submit(function(e){
-//        e.preventDefault();
-//        console.log('aja');
-//    });
+            // hide and unhide process
+            var difference = arrayDiff(main_index, arr_index);
+            $scope.tableDetails.forEach(function(row, index){
+                $scope.tableDetails[ index ].visible = 1;
+                if ( difference.indexOf(index) !== -1 ) {
+                    $scope.tableDetails[ index ].visible = 0;
+                }
+            });
+        }
+    });
 });
 gpid.controller('AddDetailController', function( $scope, $http, $timeout, $element ) {
-    $scope.$watch('detail.type', function($current){
+    $scope.$watch('detail.type', function( $current ){
         if ( $current == 'phone' ) {
             $timeout(function(){
                 window.dataNumber( $($element).find('[data-number]') );

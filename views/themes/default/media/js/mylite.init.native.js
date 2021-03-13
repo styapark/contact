@@ -336,3 +336,11 @@ function countUp(options) {
         clearInterval(timer);
     };
 }
+
+function arrayDiff( arr1, arr2 ) {
+    return arr1.filter(function(x){
+        return !arr2.includes(x);
+    }).concat( arr2.filter(function(x){
+        return !arr1.includes(x);
+    }));
+}

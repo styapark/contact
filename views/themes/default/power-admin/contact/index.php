@@ -17,7 +17,7 @@
                 <hr class="my-1">
                 <div class="form-group">
                     <button type="button" class="btn btn-primary btn-sm m-0 float-right" data-toggle="modal" data-target="#add"><i class="zmdi zmdi-plus"></i> Tambah</button>
-                    <form class="modal fade" id="add" ng-controller="AddController" novalidate>
+                    <form class="modal fade" id="add" ng-controller="AddController" data-action="<?= base_url('services/v1/'.$cname.'/add') ?>" novalidate>
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -56,7 +56,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal-detail-content">
-                                                <div class="form-group" ng-repeat="detail in tableDetails track by $index" ng-controller="AddDetailController">
+                                                <div class="form-group" ng-repeat="detail in tableDetails track by $index" ng-controller="AddDetailController" ng-hide="!detail.visible">
                                                     <div class="form-group md my-0 font-bold">{{ detail.title }}</div>
                                                     <div class="form-inline">
                                                         <div class="form-group md">
@@ -79,10 +79,10 @@
                                             <div class="form-group">
                                                 <div class="form-inline pull-right">
                                                     <div class="form-group">
-                                                        <input class="form-control md" autocomplete="off" type="text" ng-model="title" placeholder="Judul" style="width: 120px">
+                                                        <input class="form-control md" autocomplete="off" type="text" ng-model="title" onfocus="this.select()" placeholder="Judul" style="width: 120px">
                                                     </div>
                                                     <div class="form-group">
-                                                        <button type="submit" class="btn btn-sm btn-info" ng-click="addDetail()">Tambah</button>
+                                                        <button type="button" class="btn btn-sm btn-info" ng-click="addDetail()">Tambah</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -101,7 +101,7 @@
                 <hr class="my-3">
                 <div class="row">
                     <div class="table-responsive">
-                    <table class="table table-hover table-server-side" name="<?= $cname ?>" data-src="<?= MyLite_base.'services/v1/'.$cname.'/table' ?>">
+                    <table class="table table-hover table-server-side" name="<?= $cname ?>" data-src="<?= base_url('services/v1/'.$cname.'/table') ?>">
                         <thead>
                             <tr>
                                 <th data-field="#" data-sort="false">#</th>
@@ -116,7 +116,7 @@
                     </table>
                     </div>
                 </div>
-                <form class="modal fade" id="edit" ng-controller="EditController" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+                <form class="modal fade" id="edit" ng-controller="EditController" data-action="<?= base_url('services/v1/'.$cname.'/edit') ?>" novalidate>
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
