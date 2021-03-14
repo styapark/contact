@@ -17,7 +17,7 @@
                 <hr class="my-1">
                 <div class="form-group">
                     <button type="button" class="btn btn-primary btn-sm m-0 float-right" data-toggle="modal" data-target="#add"><i class="zmdi zmdi-plus"></i> Tambah</button>
-                    <form class="modal fade" id="add" ng-controller="AddController" data-action="<?= base_url('services/v1/'.$cname.'/add') ?>" novalidate>
+                    <form class="modal fade" id="add" ng-controller="AddController" data-action="<?= base_url('services/v1/'.$cname.'/add') ?>" data-redirect="<?= current_url() ?>" novalidate>
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">

@@ -53,6 +53,9 @@ gpid.directive('form', function( $rootScope, $http, $httpParamSerializerJQLike )
                                     location.href = redirect;
                                 }
                             }, 1600);
+                            if ( $(form).hasClass('modal') ) {
+                                $(form).modal('hide');
+                            }
                         }
                         else {
                             snarlDanger({
