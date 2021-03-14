@@ -1218,6 +1218,7 @@ select.form-control.md {
     position: absolute;
     right: 0;
     bottom: -18px;
+    padding-left: 0;
 }
 .form-inline .parsley-error ~ .form-bar:before, .form-inline .parsley-error ~ .form-bar:after {
     bottom: 0 !important;

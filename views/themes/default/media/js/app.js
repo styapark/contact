@@ -10,7 +10,7 @@ gpid.config(['$provide', function ($provide) {
     }]);
 }]);
 
-gpid.directive('form', function( $rootScope, $http ){
+gpid.directive('form', function( $rootScope, $http, $httpParamSerializerJQLike ){
     return {
         restrict: 'E',
         require: '^?form',
@@ -19,10 +19,77 @@ gpid.directive('form', function( $rootScope, $http ){
                 e.preventDefault();
 
                 var url = $(this).data('action');
-                var data = $(this).serializeArray();
+                var redirect = $(this).data('redirect');
+                var data = $(this).serialize();
 
                 if ( scope.parsley.isValid() && url != undefined ) {
-                    console.log(data);
+                    $http({
+                        url: url,
+                        method: 'POST',
+                        data: data,
+                        headers: {
+                            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                        }
+                    }).then(function(res, a, b){
+                        if ( typeof res.data == 'object' ) {
+                            var data = res.data;
+                            if ( data.hasOwnProperty('csrf') ) {
+                                $('[name=' + data.csrf.name + ']').val( data.csrf.hash );
+                            }
+                        }
+
+                        var text = 'Berhasil menyimpan ke database';
+                        if ( [200,201].indexOf(res.status) !== -1 ) {
+                            console.log(res);
+
+                            snarlSuccess({
+                                title: 'Success',
+                                text: text,
+                                icon: '<i class="zmdi zmdi-shield-check"></i>',
+                                timeout: 1500
+                            });
+                            setTimeout(function(){
+                                if ( redirect != undefined ) {
+                                    location.href = redirect;
+                                }
+                            }, 1600);
+                        }
+                        else {
+                            snarlDanger({
+                                title: 'Failed',
+                                text: 'Gagal menyimpan ke database. Ulangi kembali',
+                                icon: '<i class="zmdi zmdi-alert-triangle"></i>',
+                                timeout: 3000
+                            });
+                            
+                        }
+                    },function(err){
+                        var text = 'Unknown error';
+                        if ( typeof err.data == 'object' ) {
+                            var data = err.data;
+                            if ( data.hasOwnProperty('csrf') ) {
+                                $('[name=' + data.csrf.name + ']').val( data.csrf.hash );
+                            }
+                        }
+
+                        if ( [200,201].indexOf(err.status) === -1 ) {
+                            if ( [500,502,503].indexOf(err.status) !== -1 ) {
+                                text = 'Error Server';
+                            }
+                            if ( err.status == 504 ) {
+                                text = 'Timeout access to Server';
+                            }
+                            if ( err.status == 403 ) {
+                                text = 'Token expired! reload page, please';
+                            }
+                            snarlDanger({
+                                title: 'Failed',
+                                text: text,
+                                icon: '<i class="zmdi zmdi-alert-triangle"></i>',
+                                timeout: 3000
+                            });
+                        }
+                    });
                 }
             });
         }

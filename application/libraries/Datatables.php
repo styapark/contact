@@ -128,6 +128,9 @@ class Datatables {
             }
             $trim = strstr( $trim, "\nWHERE", TRUE);
         }
+        else {
+            $where = '';
+        }
         if ( strpos($trim, 'LEFT JOIN') !== FALSE ) {
             $trim = strstr( $trim, "\nLEFT JOIN", TRUE);
         }
@@ -135,7 +138,9 @@ class Datatables {
             $trim = strstr( $trim, "\nRIGHT JOIN", TRUE);
         }
         if ( strpos($trim, 'JOIN') !== FALSE ) {
-            $where = strstr( $trim, "\nJOIN" );
+            if ( $where ) {
+                $where = strstr( $trim, "\nJOIN" );
+            }
             $trim = strstr( $trim, "\nJOIN", TRUE);
         }
 

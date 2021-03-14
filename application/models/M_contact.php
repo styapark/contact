@@ -10,14 +10,18 @@
 
 class M_contact extends CI_Model {
     public $table;
+    public $table_details;
 
     public function __construct() {
         $this->table = get_nametable($this);
+        $this->table_details = 'details';
     }
 
     public function fetch( $id = NULL, $hash = NULL, $name = NULL, $company = NULL, $address = NULL, $address_company = NULL, $created = NULL, $modified = NULL ) {
         $this->db->select('*');
         $this->db->from($this->table);
+
+        // where
         if ( !empty($id) ){
             if ( is_array($id) ) {
                 $this->db->where_in( 'id_'.$this->table, force_intval($id) );
@@ -79,7 +83,7 @@ class M_contact extends CI_Model {
     }
 
     public function get_data( $id = NULL, $hash = NULL, $name = NULL, $company = NULL, $address = NULL, $address_company = NULL, $created = NULL, $modified = NULL, $full = FALSE, $array_return = FALSE ) {
-        $query = $this->fetch($id, $hash, $name, $company, $address, $address_company, $created, $modified)->get($this->table);
+        $query = $this->fetch($id, $hash, $name, $company, $address, $address_company, $created, $modified)->get();
         $fields = $query->list_fields();
 
         if ( $query->num_rows() > 0 ) {
@@ -104,5 +108,216 @@ class M_contact extends CI_Model {
             }
         }
         return $query->num_rows();
+    }
+
+    public function get_data_global( $full = FALSE, $single_row = FALSE, $array_return = FALSE ) {
+        $query = $this->db->get();
+        $fields = $query->list_fields();
+
+        if ( $query->num_rows() > 0 ) {
+            $temp = [];
+            if ( !empty($single_row) ) {
+                $row = $query->row();
+                $a = rm_tableresult($fields, $row, $this->table);
+
+                
+
+                return !$array_return ? (object) $a: $a;
+            }
+            else {
+                foreach ($query->result() as $key=>$row) {
+                    $a = rm_tableresult($fields, $row, $this->table);
+
+                    
+
+                    $temp[$key] = !$array_return ? (object) $a: $a;
+                }
+                return $temp;
+            }
+        }
+        return FALSE;
+    }
+
+    public function fetch_detail( $id = NULL, $hash = NULL, $id_contact = NULL, $type = NULL, $title = NULL, $value = NULL, $created = NULL, $modified = NULL ) {
+        $tmp = clone $this->db;
+        $table = get_table( $tmp->get_compiled_select() );
+        if ( !empty($table) ) {
+            $this->db->join($this->table_details, $this->table_details.'.id_contact='.$this->table.'.id');
+        }
+        else {
+            $this->db->from($this->table_details);
+        }
+
+        // where
+        if ( !empty($id) ){
+            if ( is_array($id) ) {
+                $this->db->where_in( 'id_'.$this->table_details, force_intval($id) );
+            }
+            else {
+                $this->db->where( 'id_'.$this->table_details, force_intval($id) );
+            }
+        }
+        if ( !empty($hash) ){
+            $this->db->where( 'hash_'.$this->table_details, force_alphanum($hash) );
+        }
+        if ( !empty($id_contact) ){
+            $this->db->where( 'id_'.$this->table, force_intval($id_contact) );
+        }
+        if ( !empty($type) ){
+            $this->db->where( 'type_'.$this->table_details, force_alphanum($type) );
+        }
+        if ( !empty($title) ){
+            $this->db->where( 'title_'.$this->table_details, force_alphanum($title) );
+        }
+        if ( !empty($value) ){
+            $this->db->where( 'value_'.$this->table_details, force_alphanum($value) );
+        }
+
+        // filter date
+        if ( !empty($created) ){
+            $dt_create = @date( 'Y-m-d', @strtotime($created) );
+            $create = [
+                $dt_create.' 00:00:00',
+                $dt_create.' 23:59:59'
+            ];
+            if ( is_array($created) ) {
+                $create = [
+                    @date( 'Y-m-d', @strtotime($created[0]) ).' 00:00:00',
+                    @date( 'Y-m-d', @strtotime($created[1]) ).' 23:59:59'
+                ];
+            }
+            $this->db->where( 'created_'.$this->table_details.' >=', $create[0] );
+            $this->db->where( 'created_'.$this->table_details.' <=', $create[1] );
+        }
+        if ( !empty($modified) ){
+            $dt_modify = @date( 'Y-m-d', @strtotime($modified) );
+            $modify = [
+                $dt_modify.' 00:00:00',
+                $dt_modify.' 23:59:59'
+            ];
+            if ( is_array($modified) ) {
+                $modify = [
+                    @date( 'Y-m-d', @strtotime($modified[0]) ).' 00:00:00',
+                    @date( 'Y-m-d', @strtotime($modified[1]) ).' 23:59:59'
+                ];
+            }
+            $this->db->where( 'modified_'.$this->table_details.' >=', $modify[0] );
+            $this->db->where( 'modified_'.$this->table_details.' <=', $modify[1] );
+        }
+
+        $this->db->order_by('type_'.$this->table_details, 'ASC');
+        $this->db->order_by('title_'.$this->table_details, 'ASC');
+        $this->db->order_by('value_'.$this->table_details, 'ASC');
+        return $this->db;
+    }
+
+    public function set_data( $option = [], $filter = TRUE, $unset = FALSE, $system = FALSE ) {
+        if ( !empty($option) ) {
+            $id = !empty($option['id']) ? intval($option['id']): NULL;
+
+            $details = !empty($option['detail']) ? $option['detail']: NULL;
+            $secure = array_concat_values($option, ['name','company','address','address_company']);
+            $option['hash'] = $hash = md5(md5($secure));
+            if ( $id ) {
+                $hash = NULL;
+            }
+
+            // check
+            $check = $this->fetch($id, $hash)->get();
+
+            // filter
+            $a = [];
+            if ( $filter ) {
+                foreach ( $check->list_fields() as $field) {
+                    $sub = str_replace('_'.$this->table,'',$field);
+                    if ( (!empty($id) && $sub == 'id') || is_empty(@$option[$sub]) ) continue;
+
+                    $a[$field] = DB_escape_filter($option[$sub]);
+                }
+            }
+            else {
+                foreach ( $option as $key=>$val) {
+                    $a[$key.'_'.$this->table] = DB_escape_filter($val);
+                }
+            }
+
+            // insert or update
+            if ( $check->num_rows() && !empty($id) ) {
+                unset($a['id']);
+
+                if ( $this->db->set($a)->where('id_'.$this->table,$id)->update($this->table) ) {
+                    if ( is_array($details) ) {
+                        foreach ($details as $row) {
+                            $row['id_contact'] = $id;
+                            $this->set_details($row, $filter, $unset, $system);
+                        }
+                    }
+                    return $id;
+                }
+            }
+            else {
+                if ( $this->db->set($a)->insert($this->table) ) {
+                    $id = $this->db->insert_id();
+                    if ( is_array($details) ) {
+                        foreach ($details as $row) {
+                            $row['id_contact'] = $id;
+                            $this->set_details($row, $filter, $unset, $system);
+                        }
+                    }
+                    return $id;
+                }
+            }
+        }
+        return FALSE;
+    }
+
+    public function set_details( $option = [], $filter = TRUE, $unset = FALSE, $system = FALSE ) {
+        if ( !empty($option) ) {
+            $id = !empty($option['id']) ? intval($option['id']): NULL;
+
+            if ( $option['type'] == 'phone' ) {
+                $option['value'] = intval($option['value']);
+            }
+            $secure = array_concat_values($option, ['type','title','value']);
+            $option['hash'] = $hash = md5(md5($secure));
+            if ( $id ) {
+                $hash = NULL;
+            }
+
+            // check
+            $check = $this->fetch_detail($id, $hash)->get();
+
+            // filter
+            $a = [];
+            if ( $filter ) {
+                foreach ( $check->list_fields() as $field) {
+                    $sub = str_replace('_'.$this->table_details,'',$field);
+                    if ( (!empty($id) && $sub == 'id') || is_empty(@$option[$sub]) ) continue;
+
+                    $a[$field] = DB_escape_filter($option[$sub]);
+                }
+            }
+            else {
+                foreach ( $option as $key=>$val) {
+                    $a[$key.'_'.$this->table_details] = DB_escape_filter($val);
+                }
+            }
+
+            // insert or update
+            if ( $check->num_rows() && !empty($id) ) {
+                unset($a['id']);
+
+                if ( $this->db->set($a)->where('id_'.$this->table_details,$id)->update($this->table_details) ) {
+                    return $id;
+                }
+            }
+            else {
+                if ( $this->db->set($a)->insert($this->table_details) ) {
+                    return $this->db->insert_id();
+                }
+            }
+            
+        }
+        return FALSE;
     }
 }

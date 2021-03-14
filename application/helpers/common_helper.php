@@ -123,11 +123,14 @@ if ( !function_exists('rm_tableprefix') ) {
 }
 
 if ( !function_exists('rm_tableresult') ) {
-    function rm_tableresult( $fields, $row, $table, $return_object = FALSE ) {
+    function rm_tableresult( $fields, $row, $table = NULL, $return_object = FALSE ) {
         $tmp = [];
         if ( is_array($fields) && is_object($row) ) {
             foreach ($fields as $field) {
-                $sub = rm_tableprefix($field, $table);
+                $sub = $field;
+                if ( !empty($table) ) {
+                    $sub = rm_tableprefix($field, $table);
+                }
                 $tmp[$sub] = $row->{$field};
             }
         }
@@ -413,5 +416,59 @@ if ( !function_exists('format_date') ) {
             'DB' => 'Y-m-d H:i:s'
         ];
         return date( @$format[$mode], $stamptime);
+    }
+}
+
+if ( !function_exists('get_table') ) {
+    function get_table( $query ) {
+        $trim = strstr($query, 'FROM');
+        if ( strpos($trim, 'ORDER') !== FALSE ) {
+            $trim = strstr( $trim, "\nORDER", TRUE);
+        }
+        if ( strpos($trim, 'GROUP') !== FALSE ) {
+            $trim = strstr( $trim, "\nGROUP", TRUE);
+        }
+        if ( strpos($trim, 'WHERE') !== FALSE ) {
+            $trim = strstr( $trim, "\nWHERE", TRUE);
+        }
+        if ( strpos($trim, 'LEFT JOIN') !== FALSE ) {
+            $trim = strstr( $trim, "\nLEFT JOIN", TRUE);
+        }
+        if ( strpos($trim, 'RIGHT JOIN') !== FALSE ) {
+            $trim = strstr( $trim, "\nRIGHT JOIN", TRUE);
+        }
+        if ( strpos($trim, 'JOIN') !== FALSE ) {
+            $trim = strstr( $trim, "\nJOIN", TRUE);
+        }
+
+        return str_replace([' ','FROM','`'], '', $trim);
+    }
+}
+
+if ( !function_exists('DB_escape_filter') ) {
+    function DB_escape_filter( $value ) {
+        $CI =& get_instance();
+        if ( is_json($value) ) {
+            return $value;
+        }
+        return $CI->db->escape_str($value);
+    }
+}
+
+if ( !function_exists('array_concat_values') ) {
+    function array_concat_values( $array, $index_concat = NULL, $glue = '' ) {
+        if ( is_array($array) ) {
+            if ( is_array($index_concat) ) {
+                $tmp = [];
+                foreach ($array as $key=>$value) {
+                    if ( in_array($key, $index_concat) ) {
+                        $tmp[] = $value;
+                    }
+                }
+                $array = $tmp;
+            }
+            $array = implode($glue, $array);
+        }
+        return $array;
     }
 }
