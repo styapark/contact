@@ -72,6 +72,7 @@ class Media extends CI_Controller {
             '4d93f5a82d0f3ff7a38cdac3044bda64' => 'snarl.js',
             'e202be5383ce0d63fad5df2cd63ef40c' => 'parsley.js',
             'd270611c1b6918f75024f19b996ccf87' => 'global.datatables.js',
+            '99b420bb8ec3744cbcf87d257eb5efb3' => 'custom.datatables.js',
             '38674066382f9ee1823e6350ec6bae36' => 'global.validation.js',
         ];
     }

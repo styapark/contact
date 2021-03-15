@@ -110,7 +110,8 @@ class M_contact extends CI_Model {
         return $query->num_rows();
     }
 
-    public function get_data_global( $full = FALSE, $single_row = FALSE, $array_return = FALSE ) {
+    public function get_data_global( $table = NULL, $callback = NULL, $single_row = FALSE, $array_return = FALSE ) {
+        if ( empty($table) ) $table = $this->table;
         $query = $this->db->get();
         $fields = $query->list_fields();
 
@@ -118,17 +119,21 @@ class M_contact extends CI_Model {
             $temp = [];
             if ( !empty($single_row) ) {
                 $row = $query->row();
-                $a = rm_tableresult($fields, $row, $this->table);
+                $a = rm_tableresult($fields, $row, $table);
 
-                
+                if ( is_callable($callback) ) {
+                    $a = $callback( $a, 0 );
+                }
 
                 return !$array_return ? (object) $a: $a;
             }
             else {
                 foreach ($query->result() as $key=>$row) {
-                    $a = rm_tableresult($fields, $row, $this->table);
+                    $a = rm_tableresult($fields, $row, $table);
 
-                    
+                    if ( is_callable($callback) ) {
+                        $a = $callback( $a, $key, @$temp[$key-1] );
+                    }
 
                     $temp[$key] = !$array_return ? (object) $a: $a;
                 }

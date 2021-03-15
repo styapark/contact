@@ -1,3 +1,12 @@
+/**
+ * Custom Javascript
+ * My Lite CMS v.3.0.0
+ * copyright Styapark Dev 2016 - 2021
+ * @author styapark
+ * @email styapark@gmail.com
+ * All rights reserved.
+ */
+
 var base = window.location.protocol + '//' + window.location.host + window.location.pathname;
 var path = base.replace(root, '');
 var surl = path.split('/');
@@ -55,7 +64,6 @@ if ( $ !== undefined ) {
                 Snarl.removeNotification(notification);
                 var urls = root + 'services/v1/' + url;
                 $.get(urls, function(e){
-                    console.log( e );
                     if ( e.status ) {
                         snarlSuccess({
                             title: e.message,

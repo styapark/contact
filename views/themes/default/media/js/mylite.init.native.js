@@ -1,10 +1,11 @@
-/*
-    Initial Native Javascript of MyLite Core Javascript
-*/
-/* 
-    Created on : Nov 2, 2017, 10:31:01 PM
-    Author     : styapark
-*/
+/**
+ * Initial Native Javascript of MyLite Core Javascript
+ * My Lite CMS v.3.0.0
+ * copyright Styapark Dev 2016 - 2021
+ * @author styapark
+ * @email styapark@gmail.com
+ * All rights reserved.
+ */
 
 
 function empty(str){

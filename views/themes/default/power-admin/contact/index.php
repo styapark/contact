@@ -123,29 +123,29 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">Edit <?= ucwords($cname) ?></h5>
-                                <input type="hidden" name="id">
+                                <input type="hidden" name="id" value="{{ id }}">
                             </div>
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="col-md-5">
                                         <div class="form-group md">
                                             <label>Nama Lengkap</label>
-                                            <input class="form-control md" autocomplete="off" type="text" name="name" required>
+                                            <input class="form-control md" autocomplete="off" type="text" name="name" ng-model="name" required>
                                             <i class="form-bar"></i>
                                         </div>
                                         <div class="form-group md">
                                             <label>Nama Perusahaan</label>
-                                            <input class="form-control md" autocomplete="off" type="text" name="company" required>
+                                            <input class="form-control md" autocomplete="off" type="text" name="company" ng-model="company" required>
                                             <i class="form-bar"></i>
                                         </div>
                                         <div class="form-group md">
                                             <label>Alamat Pribadi</label>
-                                            <textarea class="form-control md" autocomplete="off" rows="3" name="address" required></textarea>
+                                            <textarea class="form-control md" autocomplete="off" rows="3" name="address" ng-model="address" required></textarea>
                                             <i class="form-bar"></i>
                                         </div>
                                         <div class="form-group md">
                                             <label>Alamat Perusahaan</label>
-                                            <textarea class="form-control md" autocomplete="off" rows="3" name="address_company" required></textarea>
+                                            <textarea class="form-control md" autocomplete="off" rows="3" name="address_company" ng-model="address_company" required></textarea>
                                             <i class="form-bar"></i>
                                         </div>
                                     </div>

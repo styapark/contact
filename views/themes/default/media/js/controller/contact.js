@@ -20,7 +20,6 @@ gpid.controller('AddController', function( $scope, $http, $timeout, $element, $f
     $scope.addDetail = function ( index = null ) {
         var row = angular.copy($scope.rowDetail);
         row.title = $scope.title;
-        $scope.title = $scope.defaultTitle;
 
         $scope.tableDetails.push(row);
         $timeout(function(){
@@ -66,18 +65,35 @@ gpid.controller('AddDetailController', function( $scope, $http, $timeout, $eleme
 
 
 gpid.controller('EditController', function( $scope, $http, $timeout, $element, $filter ) {
+    
     $scope.tableDetails = [];
     $scope.addDetail = function ( index = null ) {
         var row = angular.copy($scope.rowDetail);
         row.title = $scope.title;
-        $scope.title = $scope.defaultTitle;
 
         $scope.tableDetails.push(row);
         $timeout(function(){
             $($element).find('[ng-model="detail.value"]:last-of-type').focus();
         }, 10);
     };
-    $scope.addDetail();
+    $scope.editDetail = function ( index = null, $title = null, $type = null, $value = null ) {
+        $scope.title = $scope.defaultTitle;
+        var row = angular.copy($scope.rowDetail);
+        if ( $title ) {
+            row.title = $title;
+        }
+        if ( $type ) {
+            row.type = $type;
+        }
+        if ( $value ) {
+            row.value = $value;
+        }
+
+        $scope.tableDetails.push(row);
+        $timeout(function(){
+            $($element).find('[ng-model="detail.value"]:last-of-type').focus();
+        }, 10);
+    };
     $scope.$watch('search', function( $current ){
         if ( $current != undefined ) {
             var main_index = [], arr_index = [];

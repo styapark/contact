@@ -34,5 +34,6 @@
         <script src="media/js/<?= md5('mylite.init.jquery.js') ?>"></script>
         <script src="media/js/<?= /*md5*/('javascript.js') ?>"></script>
         <script src="media/js/<?= md5('global.datatables.js') ?>"></script>
+        <script src="media/js/<?= md5('custom.datatables.js') ?>"></script>
     </body>
 </html>

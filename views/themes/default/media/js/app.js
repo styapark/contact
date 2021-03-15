@@ -52,6 +52,11 @@ gpid.directive('form', function( $rootScope, $http, $httpParamSerializerJQLike )
                                 if ( redirect != undefined ) {
                                     location.href = redirect;
                                 }
+                                else {
+                                    if ( window.global_datatables.length ) {
+                                        window.global_datatables[0]._table.api().ajax.reload();
+                                    }
+                                }
                             }, 1600);
                             if ( $(form).hasClass('modal') ) {
                                 $(form).modal('hide');

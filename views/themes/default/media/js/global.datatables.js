@@ -1,7 +1,7 @@
 /**
  * Custom Datatables using Server Side for process
  * My Lite CMS v.3.0.0
- * copyright Styapark Dev 2016 - 2020
+ * copyright Styapark Dev 2016 - 2021
  * @author styapark
  * @email styapark@gmail.com
  * All rights reserved.
