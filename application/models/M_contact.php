@@ -355,4 +355,13 @@ class M_contact extends CI_Model {
         }
         return FALSE;
     }
+
+    public function hard_delete( $id ) {
+        $deleted = $this->db->where('id_'. $this->table,$id)->delete($this->table);
+        if ( $deleted ) {
+            $this->db->where('id_'. $this->table,$id)->delete($this->table_details);
+            return TRUE;
+        }
+        return FALSE;
+    }
 }
