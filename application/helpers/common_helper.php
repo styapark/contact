@@ -456,13 +456,13 @@ if ( !function_exists('DB_escape_filter') ) {
 }
 
 if ( !function_exists('array_concat_values') ) {
-    function array_concat_values( $array, $index_concat = NULL, $glue = '' ) {
+    function array_concat_values( $array, $index_concat = NULL, $glue = '', $force_lower = FALSE ) {
         if ( is_array($array) ) {
             if ( is_array($index_concat) ) {
                 $tmp = [];
                 foreach ($array as $key=>$value) {
                     if ( in_array($key, $index_concat) ) {
-                        $tmp[] = $value;
+                        $tmp[] = $force_lower ? strtolower($value): $value;
                     }
                 }
                 $array = $tmp;

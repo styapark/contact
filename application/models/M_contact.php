@@ -17,7 +17,7 @@ class M_contact extends CI_Model {
         $this->table_details = 'details';
     }
 
-    public function fetch( $id = NULL, $hash = NULL, $name = NULL, $company = NULL, $address = NULL, $address_company = NULL, $created = NULL, $modified = NULL ) {
+    public function fetch( $id = NULL, $hash = NULL, $name = NULL, $company = NULL, $address = NULL, $address_company = NULL, $not_deleted = NULL, $created = NULL, $modified = NULL ) {
         $this->db->select('*');
         $this->db->from($this->table);
 
@@ -44,6 +44,9 @@ class M_contact extends CI_Model {
         }
         if ( !empty($address_company) ){
             $this->db->like( 'address_company_'.$this->table, force_alphanum($address_company) );
+        }
+        if ( empty($not_deleted) ){
+            $this->db->where( 'delete_'.$this->table, 0 );
         }
 
         // filter date
@@ -82,8 +85,8 @@ class M_contact extends CI_Model {
         return $this->db;
     }
 
-    public function get_data( $id = NULL, $hash = NULL, $name = NULL, $company = NULL, $address = NULL, $address_company = NULL, $created = NULL, $modified = NULL, $full = FALSE, $array_return = FALSE ) {
-        $query = $this->fetch($id, $hash, $name, $company, $address, $address_company, $created, $modified)->get();
+    public function get_data( $id = NULL, $hash = NULL, $name = NULL, $company = NULL, $address = NULL, $address_company = NULL, $not_deleted = NULL, $created = NULL, $modified = NULL, $callback = NULL, $array_return = FALSE ) {
+        $query = $this->fetch($id, $hash, $name, $company, $address, $address_company, $not_deleted, $created, $modified)->get();
         $fields = $query->list_fields();
 
         if ( $query->num_rows() > 0 ) {
@@ -92,7 +95,9 @@ class M_contact extends CI_Model {
                 $row = $query->row();
                 $a = rm_tableresult($fields, $row, $this->table);
 
-                
+                if ( is_callable($callback) ) {
+                    $a = $callback( $a, 0 );
+                }
 
                 return !$array_return ? (object) $a: $a;
             }
@@ -100,7 +105,9 @@ class M_contact extends CI_Model {
                 foreach ($query->result() as $key=>$row) {
                     $a = rm_tableresult($fields, $row, $this->table);
 
-                    
+                    if ( is_callable($callback) ) {
+                        $a = $callback( $a, $key, @$temp[$key-1] );
+                    }
 
                     $temp[$key] = !$array_return ? (object) $a: $a;
                 }
@@ -143,7 +150,7 @@ class M_contact extends CI_Model {
         return FALSE;
     }
 
-    public function fetch_detail( $id = NULL, $hash = NULL, $id_contact = NULL, $type = NULL, $title = NULL, $value = NULL, $created = NULL, $modified = NULL ) {
+    public function fetch_detail( $id = NULL, $hash = NULL, $id_contact = NULL, $type = NULL, $title = NULL, $value = NULL, $not_deleted = NULL, $created = NULL, $modified = NULL ) {
         $tmp = clone $this->db;
         $table = get_table( $tmp->get_compiled_select() );
         if ( !empty($table) ) {
@@ -176,6 +183,9 @@ class M_contact extends CI_Model {
         }
         if ( !empty($value) ){
             $this->db->where( 'value_'.$this->table_details, force_alphanum($value) );
+        }
+        if ( empty($not_deleted) ){
+            $this->db->where( 'delete_'.$this->table_details, 0 );
         }
 
         // filter date
@@ -221,7 +231,7 @@ class M_contact extends CI_Model {
             $id = !empty($option['id']) ? intval($option['id']): NULL;
 
             $details = !empty($option['detail']) ? $option['detail']: NULL;
-            $secure = array_concat_values($option, ['name','company','address','address_company']);
+            $secure = array_concat_values($option, ['name','company','address','address_company'], '', TRUE);
             $option['hash'] = $hash = md5(md5($secure));
             if ( $id ) {
                 $hash = NULL;
@@ -252,10 +262,17 @@ class M_contact extends CI_Model {
 
                 if ( $this->db->set($a)->where('id_'.$this->table,$id)->update($this->table) ) {
                     if ( is_array($details) ) {
+                        $ids = [];
                         foreach ($details as $row) {
+                            $ids[] = $row['id'];
                             $row['id_contact'] = $id;
                             $this->set_details($row, $filter, $unset, $system);
                         }
+                        $this->db->set([
+                            'delete_'.$this->table_details => 1
+                        ])->where('id_'. $this->table,$id)
+                          ->where_not_in('id_'. $this->table_details, $ids)
+                          ->update($this->table_details);
                     }
                     return $id;
                 }
@@ -283,7 +300,7 @@ class M_contact extends CI_Model {
             if ( $option['type'] == 'phone' ) {
                 $option['value'] = intval($option['value']);
             }
-            $secure = array_concat_values($option, ['type','title','value']);
+            $secure = array_concat_values($option, ['type','title','value'], '', TRUE);
             $option['hash'] = $hash = md5(md5($secure));
             if ( $id ) {
                 $hash = NULL;
@@ -322,6 +339,19 @@ class M_contact extends CI_Model {
                 }
             }
             
+        }
+        return FALSE;
+    }
+
+    public function delete( $id ) {
+        $deleted = $this->db->set([
+            'delete_'.$this->table => 1
+        ])->where('id_'. $this->table,$id)->update($this->table);
+        if ( $deleted ) {
+            $this->db->set([
+                'delete_'.$this->table_details => 1
+            ])->where('id_'. $this->table,$id)->update($this->table_details);
+            return TRUE;
         }
         return FALSE;
     }

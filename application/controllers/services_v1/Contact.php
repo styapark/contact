@@ -18,7 +18,7 @@ class Contact extends API_Controller{
 
     // delete
     public function index_get( $id ) {
-        $this->data['data'] = $id;
+        $this->data['data'] = $this->m_contact->delete($id);
         $this->data['status'] = (bool) $this->data['data'];
 
         $this->responses($this->data, $this->data['status'] ? 200: 406);
@@ -26,10 +26,10 @@ class Contact extends API_Controller{
 
     // table
     public function table_get() {
-//        $id = $hash = $name = $company = $address = $address_company = $created = $modified = NULL;
+//        $id = $hash = $name = $company = $address = $address_company = $not_deleted = $created = $modified = NULL;
 //        $type = $title = $value = NULL;
 //        $created = date('Y-m-d H:i:s');$array
-//        $db = $this->m_contact->fetch($id, $hash, $name, $company, $address, $address_company, $created, $modified);
+//        $db = $this->m_contact->fetch($id, $hash, $name, $company, $address, $address_company, $not_deleted, $created, $modified);
         $db = $this->m_contact->fetch();
 
         $columns = [
