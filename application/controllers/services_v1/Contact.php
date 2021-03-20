@@ -45,10 +45,19 @@ class Contact extends API_Controller{
             $row = (object) rm_tableresult($fields, $row, $this->m_contact->table);
             $row->{'#'} = @$_GET['start']+$index+1;
 
-            $this->m_contact->fetch_detail(NULL, NULL, $row->id);
+            $this->m_contact->fetch_detail( NULL, NULL, $row->id );
             $row->details = $this->m_contact->get_data_global( $this->m_contact->table_details );
+            $this->m_contact->fetch_detail( NULL, NULL, $row->id, 'tags' );
+            $tags = $this->m_contact->get_data_global( $this->m_contact->table_details, function( $row ){
+                return [ 'tag' => $row['value'] ];
+            });
+
             $row->tags = [];
-            $row->tags_text = implode(', ', $row->tags);
+            $row->tags_text = '';
+            if ( !empty($tags) ) {
+                $row->tags = array_column( (array) $tags, 'tag');
+                $row->tags_text = '<span class="badge badge-default tags">'.implode('</span>, <span class="badge badge-default tags">', $row->tags).'</span>';
+            }
 
             return $row;
         });

@@ -264,9 +264,8 @@ class M_contact extends CI_Model {
                     if ( is_array($details) ) {
                         $ids = [];
                         foreach ($details as $row) {
-                            $ids[] = $row['id'];
                             $row['id_contact'] = $id;
-                            $this->set_details($row, $filter, $unset, $system);
+                            $ids[] = $this->set_details($row, $filter, $unset, $system);
                         }
                         $this->db->set([
                             'delete_'.$this->table_details => 1
@@ -301,6 +300,9 @@ class M_contact extends CI_Model {
                 $option['value'] = intval($option['value']);
             }
             $secure = array_concat_values($option, ['type','title','value'], '', TRUE);
+            if ( $option['type'] == 'tags' ) {
+                $secure = array_concat_values($option, ['id_contact','type','title','value'], '', TRUE);
+            }
             $option['hash'] = $hash = md5(md5($secure));
             if ( $id ) {
                 $hash = NULL;

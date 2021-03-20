@@ -945,7 +945,7 @@ table.table th, table.table td {
     padding-top: 0.7rem;
     padding-bottom: 0.7rem;
 }
-table tbody td span.badge {
+table tbody td span.badge:not(.tags) {
     box-shadow: none;
     text-align: center;
     margin-left: .25rem;
@@ -959,6 +959,11 @@ table tbody td span.badge.badge-box {
 }
 table tbody td span.badge .zmdi {
     margin-right: 0;
+}
+table tbody td span.badge.tags {
+    box-shadow: none;
+    font-weight: 400;
+    padding: .3em;
 }
 table.dataTable {
     width: 100% !important;
