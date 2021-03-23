@@ -17,7 +17,7 @@ class M_contact extends CI_Model {
         $this->table_details = 'details';
     }
 
-    public function fetch( $id = NULL, $hash = NULL, $name = NULL, $company = NULL, $address = NULL, $address_company = NULL, $not_deleted = NULL, $created = NULL, $modified = NULL ) {
+    public function fetch( $id = NULL, $hash = NULL, $name = NULL, $company = NULL, $address = NULL, $address_company = NULL, $not_deleted = NULL, $created = NULL, $modified = NULL, $order_by = NULL ) {
         $this->db->select('*');
         $this->db->from($this->table);
 
@@ -81,7 +81,21 @@ class M_contact extends CI_Model {
             $this->db->where( 'modified_'.$this->table.' <=', $modify[1] );
         }
 
-        $this->db->order_by('name_'.$this->table, 'ASC');
+        if ( is_string($order_by) ) {
+            $this->db->order_by($order_by);
+        }
+        elseif ( $order_by === FALSE ) {
+            
+        }
+        else {
+            $this->db->order_by('name_'.$this->table, 'ASC');
+        }
+        return $this->db;
+    }
+
+    public function like_custom( $field = 'value', $match = '' ) {
+        $this->db->like( $field.'_'.$this->m_contact->table, force_alphanum_freetext($match) );
+
         return $this->db;
     }
 
@@ -150,11 +164,11 @@ class M_contact extends CI_Model {
         return FALSE;
     }
 
-    public function fetch_detail( $id = NULL, $hash = NULL, $id_contact = NULL, $type = NULL, $title = NULL, $value = NULL, $not_deleted = NULL, $created = NULL, $modified = NULL ) {
+    public function fetch_detail( $id = NULL, $hash = NULL, $id_contact = NULL, $type = NULL, $title = NULL, $value = NULL, $not_deleted = NULL, $created = NULL, $modified = NULL, $order_by = NULL ) {
         $tmp = clone $this->db;
         $table = get_table( $tmp->get_compiled_select() );
         if ( !empty($table) ) {
-            $this->db->join($this->table_details, $this->table_details.'.id_contact='.$this->table.'.id');
+            $this->db->join($this->table_details, $this->table_details.'.id_contact='.$this->table.'.id_'. $this->table);
         }
         else {
             $this->db->from($this->table_details);
@@ -220,9 +234,24 @@ class M_contact extends CI_Model {
             $this->db->where( 'modified_'.$this->table_details.' <=', $modify[1] );
         }
 
-        $this->db->order_by('type_'.$this->table_details, 'ASC');
-        $this->db->order_by('title_'.$this->table_details, 'ASC');
-        $this->db->order_by('value_'.$this->table_details, 'ASC');
+
+        if ( is_string($order_by) ) {
+            $this->db->order_by($order_by);
+        }
+        elseif ( $order_by === FALSE ) {
+            
+        }
+        else {
+            $this->db->order_by('type_'.$this->table_details, 'ASC');
+            $this->db->order_by('title_'.$this->table_details, 'ASC');
+            $this->db->order_by('value_'.$this->table_details, 'ASC');
+        }
+        return $this->db;
+    }
+
+    public function like_custom_details( $field = 'value', $match = '' ) {
+        $this->db->like( $field.'_'.$this->m_contact->table_details, force_alphanum_freetext($match) );
+
         return $this->db;
     }
 
@@ -297,7 +326,7 @@ class M_contact extends CI_Model {
             $id = !empty($option['id']) ? intval($option['id']): NULL;
 
             if ( $option['type'] == 'phone' ) {
-                $option['value'] = intval($option['value']);
+                $option['value'] = force_numeric($option['value']);
             }
             $secure = array_concat_values($option, ['type','title','value'], '', TRUE);
             if ( $option['type'] == 'tags' ) {

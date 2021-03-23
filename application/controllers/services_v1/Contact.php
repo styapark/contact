@@ -9,11 +9,13 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Contact extends API_Controller{
+class Contact extends API_Controller {
+    protected $keyword;
     public function __construct() {
         parent::__construct(TRUE);
 
         $this->load->library('datatables');
+        $this->keyword = $this->get('keyword');
     }
 
     // delete
@@ -79,5 +81,32 @@ class Contact extends API_Controller{
         $this->data['status'] = (bool) $this->data['data'];
 
         $this->responses($this->data, $this->data['status'] ? 200: 406);
+    }
+
+    public function suggestion_get( $type = NULL ) {
+        if ( !empty($type) && in_array($type, ['phone','email']) ) {
+            $this->data['data'] = $this->{'suggestion_'.$type}();
+//            $this->data['message'] = $this->db->last_query();
+        }
+        $this->data['status'] = (bool) $this->data['data'];
+
+        $this->responses($this->data, $this->data['status'] ? 200: 406);
+    }
+
+    protected function suggestion_phone() {
+        $this->m_contact->fetch( NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, FALSE );
+        $this->m_contact->fetch_detail( NULL, NULL, NULL, 'phone', NULL, NULL, 1 );
+        $this->m_contact->like_custom_details( 'value', $this->keyword );
+        return $this->m_contact->get_data_global( $this->m_contact->table_details, function($row) {
+
+            return (object) [
+                'value' => $row['value'],
+                'label' => $row['value'].' ['.$row['name_'.$this->m_contact->table].']'
+            ];
+        });
+    }
+
+    protected function suggestion_email() {
+        return ;
     }
 }

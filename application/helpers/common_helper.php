@@ -409,6 +409,39 @@ if ( !function_exists('force_alphanum') ) {
     }
 }
 
+if ( !function_exists('force_numeric') ) {
+    function force_numeric( $option ) {
+        $tmp = [];
+        $match = '';
+        if ( !empty($option) && is_array($option) ) {
+            foreach ($option as $key=>$row) {
+                preg_match('/[0-9]+/', $row, $match);
+                $tmp[$key] = $match[0];
+            }
+        }
+        else {
+            preg_match('/[0-9]+/', $option, $match);
+            $tmp = $match[0];
+        }
+        return $tmp;
+    }
+}
+
+if ( !function_exists('force_alphanum_freetext') ) {
+    function force_alphanum_freetext( $option ) {
+        $tmp = [];
+        if ( !empty($option) && is_array($option) ) {
+            foreach ($option as $key=>$row) {
+                $tmp[$key] = preg_filter('/[`~!@#$%^&*()+={}\[\]|\\\:;“"’\'<>?๐฿\/]*/', '', $row);
+            }
+        }
+        else {
+            $tmp = preg_filter('/[`~!@#$%^&*()_+={}\[\]|\\\:;“"’\'<>?๐฿\/]*/', '', $option);
+        }
+        return $tmp;
+    }
+}
+
 if ( !function_exists('format_date') ) {
     function format_date( $stamptime, $mode = 'ID' ) {
         $format = [
