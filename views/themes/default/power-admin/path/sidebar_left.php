@@ -56,6 +56,15 @@
                 <a class="nav-link waves-effect" href="<?= power_admin('chart') ?>"><i class="zmdi zmdi-trending-up"></i>Chart</a>
             </li>
 <?php } ?>
+<?php if (in_array('m_backup', $modules) ) { ?>
+            <li class="nav-item side-dropdown" data-sub="backup">
+                <a class="nav-link waves-effect" href="#"><i class="zmdi zmdi-import-export"></i>Backup</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item waves-effect" href="<?= power_admin('backup/export') ?>">Export</a>
+                    <a class="dropdown-item waves-effect" href="<?= power_admin('backup/import') ?>">Import</a>
+                </div>
+            </li>
+<?php } ?>
             <?php } else { ?>
             <li class="nav-item side-dropdown" data-sub="settings">
                 <a class="nav-link waves-effect" href="#"><i class="zmdi zmdi-settings"></i>Settings</a>
